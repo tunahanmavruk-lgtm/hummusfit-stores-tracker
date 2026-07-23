@@ -55,7 +55,14 @@ async function getLocations() {
   return data.locations.edges
     .map((e) => e.node)
     .filter((loc) => loc.isActive)
-    .filter((loc) => !loc.name.toLowerCase().includes("fulfillment kitchen"));
+    .filter((loc) => {
+      const n = loc.name.toLowerCase();
+      return (
+        !n.includes("fulfillment kitchen") &&
+        !n.includes("shipping") &&
+        !n.includes("warehouse")
+      );
+    });
 }
 
 // Get today's orders (paginated) with their location + total price
@@ -90,6 +97,9 @@ async function getTodaysOrders() {
                 name
               }
               sourceName
+              customer {
+                tags
+              }
             }
           }
           pageInfo {
@@ -125,13 +135,20 @@ app.get("/api/store-sales", async (req, res) => {
       totals[loc.name] = { name: loc.name, sales: 0, orders: 0, isOnline: false };
     });
     totals["Online"] = { name: "Online", sales: 0, orders: 0, isOnline: true };
+    totals["Wholesale"] = { name: "Wholesale", sales: 0, orders: 0, isOnline: true, isWholesale: true };
 
     orders.forEach((order) => {
       const amount = parseFloat(
         order.currentTotalPriceSet?.shopMoney?.amount || "0"
       );
       const locName = order.physicalLocation?.name;
-      const bucket = locName && totals[locName] ? totals[locName] : totals["Online"];
+      const customerTags = (order.customer?.tags || []).map((t) => t.toLowerCase());
+      const isWholesale = !locName && customerTags.includes("wholesale");
+      const bucket = locName
+        ? (totals[locName] || totals["Online"])
+        : isWholesale
+        ? totals["Wholesale"]
+        : totals["Online"];
       bucket.sales += amount;
       bucket.orders += 1;
     });
