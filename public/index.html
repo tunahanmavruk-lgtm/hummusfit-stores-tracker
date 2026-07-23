@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hummus Fit — Stores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#F2EFE9;
+    --void:#0B0B0A;
+    --paper:#1B1A17;
+    --teal:#2BBFAA;
+    --orange:#E8612C;
+    --gold:#F0A93B;
+    --steel:#3A3A38;
+    --steel-light:#57554F;
+    --dim:#9A968C;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{background:var(--void); color:var(--ink); font-family:'Montserrat',sans-serif; height:100%;}
+  body{
+    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.035) 1px, transparent 0);
+    background-size: 22px 22px;
+    padding-bottom: 60px;
+  }
+
+  header{
+    padding: 32px 6vw 22px;
+    border-bottom: 1px solid var(--steel);
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--teal);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom: 10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:7px; height:7px;
+    background: var(--teal);
+    border-radius:50%;
+    box-shadow: 0 0 8px var(--teal);
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:0.35; } }
+  h1{
+    font-family:'Bebas Neue', sans-serif;
+    font-size: clamp(34px, 5vw, 56px);
+    line-height: 0.95;
+  }
+  h1 span{ color: var(--orange); }
+  .total-block{
+    text-align:right;
+  }
+  .total-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    color: var(--dim);
+    margin-bottom: 4px;
+  }
+  .total-value{
+    font-family:'Bebas Neue', sans-serif;
+    font-size: 40px;
+    color: var(--teal);
+    font-variant-numeric: tabular-nums;
+  }
+
+  main{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 30px 6vw 0;
+  }
+
+  .race-row{
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    padding: 10px 0;
+    transition: transform .6s cubic-bezier(0.22,1,0.36,1);
+    position: relative;
+  }
+  .race-rank{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--steel-light);
+    width: 22px;
+    flex-shrink:0;
+    text-align:right;
+  }
+  .race-label{
+    width: 150px;
+    flex-shrink:0;
+    font-size: 13.5px;
+    font-weight:600;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .race-label .badge{
+    font-size:9px;
+    font-family:'JetBrains Mono', monospace;
+    padding:2px 6px;
+    border-radius:999px;
+    background: var(--orange);
+    color:var(--void);
+    font-weight:700;
+    flex-shrink:0;
+  }
+  .race-track{
+    flex:1;
+    background: var(--paper);
+    border-radius: 6px;
+    height: 34px;
+    position:relative;
+    overflow:hidden;
+    border: 1px solid var(--steel);
+  }
+  .race-bar{
+    position:absolute;
+    top:0; left:0; bottom:0;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--teal), #57DFC5);
+    transition: width .7s cubic-bezier(0.22,1,0.36,1);
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    padding-right: 10px;
+  }
+  .race-bar.online{ background: linear-gradient(90deg, var(--orange), #F58B5C); }
+  .race-value{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight:700;
+    color: var(--void);
+    font-variant-numeric: tabular-nums;
+    white-space:nowrap;
+  }
+  .race-orders{
+    width: 70px;
+    flex-shrink:0;
+    text-align:right;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--dim);
+  }
+
+  .refresh-note{
+    max-width: 980px;
+    margin: 26px auto 0;
+    padding: 0 6vw;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--steel-light);
+  }
+
+  .empty-state{
+    text-align:center;
+    padding: 60px 24px;
+    color: var(--dim);
+    font-family:'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height:1.8;
+  }
+  .empty-state b{ color: var(--orange); }
+
+  @media (max-width: 640px){
+    .race-label{ width: 96px; font-size:12px; }
+    .race-orders{ width:50px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="eyebrow">Hummus Fit / All Locations</div>
+    <h1>STORE <span>RACE</span></h1>
+  </div>
+  <div class="total-block">
+    <div class="total-label">Today's Total</div>
+    <div class="total-value" id="totalValue">$0</div>
+  </div>
+</header>
+
+<main id="raceContainer">
+  <div class="empty-state">Loading store sales…</div>
+</main>
+
+<div class="refresh-note" id="refreshNote">Refreshing every 30 seconds</div>
+
+<script>
+  var maxSalesEver = 1;
+
+  function fmtMoney(n){
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+
+  function render(stores){
+    var container = document.getElementById('raceContainer');
+    if(!stores || stores.length === 0){
+      container.innerHTML = '<div class="empty-state">No store data yet today.</div>';
+      return;
+    }
+
+    var total = stores.reduce(function(sum, s){ return sum + s.sales; }, 0);
+    document.getElementById('totalValue').textContent = fmtMoney(total);
+
+    var maxSales = Math.max.apply(null, stores.map(function(s){ return s.sales; }));
+    maxSalesEver = Math.max(maxSalesEver, maxSales, 1);
+
+    var existing = container.querySelector('.race-row');
+    if(!existing){
+      container.innerHTML = '';
+    }
+
+    stores.forEach(function(store, i){
+      var pct = Math.max((store.sales / maxSalesEver) * 100, store.sales > 0 ? 4 : 0);
+      var rowId = 'row-' + store.name.replace(/[^a-zA-Z0-9]/g, '');
+      var row = document.getElementById(rowId);
+
+      if(!row){
+        row = document.createElement('div');
+        row.className = 'race-row';
+        row.id = rowId;
+        row.innerHTML =
+          '<div class="race-rank">' + (i+1) + '</div>' +
+          '<div class="race-label">' + store.name + (store.isOnline ? ' <span class="badge">WEB</span>' : '') + '</div>' +
+          '<div class="race-track"><div class="race-bar' + (store.isOnline ? ' online' : '') + '" style="width:0%"><span class="race-value">' + fmtMoney(store.sales) + '</span></div></div>' +
+          '<div class="race-orders">' + store.orders + ' orders</div>';
+        container.appendChild(row);
+        requestAnimationFrame(function(){
+          row.querySelector('.race-bar').style.width = pct + '%';
+        });
+      } else {
+        row.querySelector('.race-rank').textContent = (i+1);
+        row.querySelector('.race-bar').style.width = pct + '%';
+        row.querySelector('.race-value').textContent = fmtMoney(store.sales);
+        row.querySelector('.race-orders').textContent = store.orders + ' orders';
+        container.appendChild(row); // re-append in new order — triggers reflow-based reorder
+      }
+    });
+  }
+
+  function fetchSales(){
+    fetch('/api/store-sales')
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if(data.error){
+          document.getElementById('raceContainer').innerHTML =
+            '<div class="empty-state">Couldn\'t load store sales.<br><b>' + data.error + '</b><br><br>Check SHOPIFY_STORE_DOMAIN / SHOPIFY_ADMIN_ACCESS_TOKEN on Railway.</div>';
+          return;
+        }
+        render(data.stores);
+      })
+      .catch(function(){
+        document.getElementById('raceContainer').innerHTML =
+          '<div class="empty-state">Couldn\'t reach the tracker service.</div>';
+      });
+  }
+
+  fetchSales();
+  setInterval(fetchSales, 30000);
+</script>
+
+</body>
+</html>
