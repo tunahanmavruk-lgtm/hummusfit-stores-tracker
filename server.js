@@ -54,7 +54,8 @@ async function getLocations() {
   const data = await shopifyGraphQL(query);
   return data.locations.edges
     .map((e) => e.node)
-    .filter((loc) => loc.isActive);
+    .filter((loc) => loc.isActive)
+    .filter((loc) => !loc.name.toLowerCase().includes("fulfillment kitchen"));
 }
 
 // Get today's orders (paginated) with their location + total price
