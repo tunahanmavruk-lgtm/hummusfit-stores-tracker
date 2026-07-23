@@ -1,0 +1,15 @@
+{
+  "name": "hummusfit-stores-tracker",
+  "version": "1.0.0",
+  "description": "Live race-chart sales tracker across all Hummus Fit store locations plus online, powered by Shopify",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
