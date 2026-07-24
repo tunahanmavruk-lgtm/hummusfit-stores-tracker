@@ -65,14 +65,33 @@ async function getLocations() {
     });
 }
 
+// Compute the real UTC instant corresponding to midnight in America/New_York
+// (handles EST/EDT automatically). This is independent of whatever timezone
+// the server itself happens to run in — Railway containers default to UTC.
+function getStartOfDayEastern(now = new Date()) {
+  const fmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    hour12: false,
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+  const parts = fmt.formatToParts(now).reduce((acc, p) => {
+    acc[p.type] = p.value;
+    return acc;
+  }, {});
+  const hour = parseInt(parts.hour, 10) % 24; // "24" means midnight in some locales
+  const msSinceMidnightEastern =
+    (hour * 3600 + parseInt(parts.minute, 10) * 60 + parseInt(parts.second, 10)) *
+      1000 +
+    now.getMilliseconds();
+  return new Date(now.getTime() - msSinceMidnightEastern);
+}
+
 // Get today's orders (paginated) with their location + total price
 async function getTodaysOrders() {
   const now = new Date();
-  const startOfDay = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate()
-  );
+  const startOfDay = getStartOfDayEastern(now);
   const isoStart = startOfDay.toISOString();
 
   let orders = [];
