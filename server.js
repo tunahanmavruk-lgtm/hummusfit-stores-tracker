@@ -129,7 +129,7 @@ async function getTodaysOrders() {
     `;
     const data = await shopifyGraphQL(query, {
       cursor,
-      queryString: `created_at:>='${isoStart}' status:any`,
+      queryString: `created_at:>='${isoStart}' status:any -status:cancelled`,
     });
     const edges = data.orders.edges;
     orders = orders.concat(edges.map((e) => e.node));
